@@ -22,9 +22,11 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes)
-app.get("/", (res) => {
-    return res.json({ success: "Backend successful Deploy" });
-})
+app.get("/", (req, res) => {
+    res.send().json({
+        message: "Deployed successfully"
+    })
+});
 
 // app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
