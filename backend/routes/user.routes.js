@@ -6,7 +6,7 @@ import {getUsersSidebar} from "../controllers/user.controller.js"
 
 const router = express.Router();
 
-router.get("/", protectRoute, getUsersSidebar)
+router.get("/",  getUsersSidebar)
 
 
 
