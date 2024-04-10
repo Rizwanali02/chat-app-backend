@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/generateToken.js";
+import jwt from 'jsonwebtoken';
 
 const singup = async (req, res) => {
     try {
@@ -60,23 +61,36 @@ const singup = async (req, res) => {
 }
 const login = async (req, res) => {
     try {
-        const { username, password } = req.body
+        const { username, password } = req.body;
 
         const user = await User.findOne({ username });
-        const isPasswordCorrect =await bcrypt.compare(password, user?.password || "");
-
-        if (!user || !isPasswordCorrect) {
-          return res.status(400).json({ error: "Invalid username and password" });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid username and password" });
         }
 
-        generateTokenAndSetCookie(user._id, res);
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ error: "Invalid username and password" });
+        }
+
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+            expiresIn: "15d"
+        });
+
+        // Set JWT token as a cookie
+        res.cookie("jwt", token, {
+            maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+            httpOnly: true,
+            sameSite: "strict",
+            secure: process.env.NODE_ENV !== "development"
+        });
 
         res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
             username: user.username,
             profilePic: user.profilePic,
-            message:"--Login Successfully---"
+            token // include the token in the response
         });
 
     } catch (error) {
@@ -84,6 +98,7 @@ const login = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 const logout = (req, res) => {
     try {
         res.cookie("jwt","",{maxAge:0})
