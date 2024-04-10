@@ -7,7 +7,7 @@ import connectToMongoDB from "./database/connectToMongoDB.js";
 import messageRoutes from "./routes/message.routes.js"
 import userRoutes from "./routes/user.routes.js"
 import { app, server } from "./socket/socket.js";
-// import cors from "cors"
+import cors from "cors"
 
 const PORT = process.env.PORT || 8000;
 
