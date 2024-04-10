@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000;
 dotenv.config();
 
 app.use(cors({
-    origin: ["*","http://localhost:3000", "https://real-time-chat-app-six.vercel.app"],
+    origin: ["*", "https://real-time-chat-app-six.vercel.app","http://localhost:3000"],
     methods: ["GET", "POST"]
 }));
 app.use(express.json());
