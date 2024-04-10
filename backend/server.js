@@ -23,10 +23,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes)
 app.get("/", (req, res) => {
-    res.send().json({
-        message: "Deployed successfully"
-    })
+    res.send("Deployed successfully");
 });
+
 
 // app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
